@@ -3,15 +3,6 @@
 	padding: 20px;
 }
 
-.list {
-	text-align: left;
-	padding: 5px;
-	margin: 5px;
-	border-bottom: 1px solid gray;
-	border-left: 1px solid gray;
-	box-shadow: 5px 3px 3px rgb(58, 85, 124);
-}
-
 .loader {
 	position: fixed;
 	top: 50%;
