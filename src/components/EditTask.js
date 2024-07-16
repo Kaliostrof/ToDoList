@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import styles from './BtnTask.module.css';
+import { ref, set } from 'firebase/database';
+import { db } from '../firebase';
 
 export const EditTask = ({ refresh }) => {
 	const [isUpdating, setIsUpdating] = useState(false);
@@ -9,27 +11,18 @@ export const EditTask = ({ refresh }) => {
 		setIsUpdating(true);
 		const editElem = event.target.closest('div');
 		const editIndex = editElem.id;
-		const oldText = editElem.text;
-		console.log(oldText);
+		const todoRef = ref(db, `list/${editIndex}`);
+
 		let newText = prompt('Измените задачу:');
 		if (newText === null) {
 			setIsUpdating(false);
 			return;
 		} else if (newText !== '') {
-			fetch(`http://localhost:3005/list/${editIndex}`, {
-				method: 'PUT',
-				headers: { 'Content-type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					// text: event.target.value,
-					text: newText,
-				}),
+			set(todoRef, {
+				text: newText,
 			})
-				.then((rawResponce) => {
-					rawResponce.json();
-				})
 				.then((responce) => {
 					console.log('Ответ сервера', responce);
-					refresh();
 				})
 				.finally(() => {
 					setIsUpdating(false);

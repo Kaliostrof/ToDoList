@@ -1,27 +1,23 @@
 import { useState } from 'react';
 import styles from './AddTask.module.css';
+import { ref, push } from 'firebase/database';
+import { db } from '../firebase';
 
-export const AddTask = ({ refresh, setInputData, inputData, onValueInputChange }) => {
+export const AddTask = ({ setInputData, inputData, onValueInputChange }) => {
 	const [isCreating, setIsCreating] = useState(false);
+
+	const todosRef = ref(db, 'list');
 
 	const onSubmit = (event) => {
 		event.preventDefault();
 		setIsCreating(true);
 
 		if (inputData !== '') {
-			fetch('http://localhost:3005/list', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					text: inputData,
-				}),
+			push(todosRef, {
+				text: inputData,
 			})
-				.then((rawResponce) => {
-					rawResponce.json();
-				})
 				.then((responce) => {
 					console.log('Ответ сервера', responce);
-					refresh();
 				})
 				.finally(() => {
 					setIsCreating(false);

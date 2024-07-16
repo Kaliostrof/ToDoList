@@ -4,11 +4,13 @@ import { AddTask } from './components/AddTask';
 
 import { SearchingTask } from './components/SearchingTask';
 import { List } from './components/List';
+import { ref, onValue } from 'firebase/database';
+import { db } from './firebase';
 
 export const App = () => {
 	const [toDo, setToDo] = useState([]);
 	const [inputData, setInputData] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [refreshFlag, setRefreshFlag] = useState(false);
 	const [searchingData, setSearchingData] = useState('');
 	const [isSorting, setIsSorting] = useState(false);
@@ -17,15 +19,15 @@ export const App = () => {
 		setRefreshFlag(!refreshFlag);
 	};
 	useEffect(() => {
-		setIsLoading(true);
-		fetch('http://localhost:3005/list')
-			.then((response) => response.json())
-			.then((json) => {
-				setToDo(json);
-				console.log(json);
-			})
-			.finally(() => setIsLoading(false));
-	}, [refreshFlag]);
+		const todosRef = ref(db, 'list');
+
+		return onValue(todosRef, (snapshot) => {
+			const loadedList = snapshot.val() || {};
+			setToDo(loadedList);
+			console.log(Object.entries(toDo));
+			setIsLoading(false);
+		});
+	}, []);
 
 	// function debounce(func, delay = 1500) {
 	// 	let timeout;
@@ -65,32 +67,34 @@ export const App = () => {
 				<div className={styles.loader}></div>
 			) : !searchingData ? (
 				!isSorting ? (
-					toDo.map((list) => {
+					Object.entries(toDo).map(([id, { text }]) => {
 						return (
 							<List
-								id={list.id}
-								text={list.text}
+								id={id}
+								text={text}
 								onValueInputChange={onValueInputChange}
 								refresh={refresh}
 							/>
 						);
 					})
 				) : (
-					toDo
+					Object.entries(toDo)
 						.sort((a, b) => {
-							if (a.text.toLowerCase() < b.text.toLowerCase()) {
+							console.log(a, b);
+							if (a[1].text.toLowerCase() < b[1].text.toLowerCase()) {
+								console.log(a.text, b.text);
 								return -1;
 							}
-							if (a.text.toLowerCase() > b.text.toLowerCase()) {
+							if (a[1].text.toLowerCase() > b[1].text.toLowerCase()) {
 								return 1;
 							}
 							return 0;
 						})
-						.map((list) => {
+						.map(([id, { text }]) => {
 							return (
 								<List
-									id={list.id}
-									text={list.text}
+									id={id}
+									text={text}
 									onValueInputChange={onValueInputChange}
 									refresh={refresh}
 								/>
@@ -98,17 +102,15 @@ export const App = () => {
 						})
 				)
 			) : (
-				toDo
-					.filter((list) => {
-						return list.text
-							.toLowerCase()
-							.includes(searchingData.toLowerCase());
+				Object.entries(toDo)
+					.filter(([id, { text }]) => {
+						return text.toLowerCase().includes(searchingData.toLowerCase());
 					})
-					.map((list) => {
+					.map(([id, { text }]) => {
 						return (
 							<List
-								id={list.id}
-								text={list.text}
+								id={id}
+								text={text}
 								onValueInputChange={onValueInputChange}
 								refresh={refresh}
 							/>
