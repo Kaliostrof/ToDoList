@@ -1,17 +1,27 @@
-.list {
+.card {
 	display: flex;
-	justify-content: space-between;
-	padding: 5px;
-	margin: 5px;
+	justify-content: center;
+	text-align: center;
+	flex-direction: column;
+	margin-top: 20px;
+
 	border-bottom: 1px solid gray;
 	border-left: 1px solid gray;
+	border-top: 1px dashed gray;
 	box-shadow: 5px 3px 3px rgb(58, 85, 124);
 }
 
-.list-input {
-	border: none;
-	box-sizing: border-box;
-	width: 70%;
+.card-text {
+	max-height: max-content;
+	width: 100%;
 	color: black;
+	font-size: 15px;
+	font-style: italic;
 	background: none;
+	text-align: center;
+	margin: 10px 0;
+}
+
+.card-btn {
+	margin-bottom: 10px;
 }

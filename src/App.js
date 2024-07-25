@@ -1,6 +1,7 @@
 import styles from './App.module.css';
 import { useEffect, useState } from 'react';
 import { AddTask } from './components/AddTask';
+import { Routes, Route, NavLink } from 'react-router-dom';
 
 import { SearchingTask } from './components/SearchingTask';
 import { List } from './components/List';
@@ -45,6 +46,10 @@ export const App = () => {
 		setSearchingData(target.value);
 	};
 
+	const NotFound = () => (
+		<div className={styles.notFound}>Данная задача отсутствует...</div>
+	);
+
 	return (
 		<div className={styles.app}>
 			<h2>ToDo's List:</h2>
@@ -67,12 +72,9 @@ export const App = () => {
 				!isSorting ? (
 					toDo.map((list) => {
 						return (
-							<List
-								id={list.id}
-								text={list.text}
-								onValueInputChange={onValueInputChange}
-								refresh={refresh}
-							/>
+							<div className={styles.links}>
+								<NavLink to={`/${list.id}`}>{list.text}</NavLink>
+							</div>
 						);
 					})
 				) : (
@@ -88,12 +90,9 @@ export const App = () => {
 						})
 						.map((list) => {
 							return (
-								<List
-									id={list.id}
-									text={list.text}
-									onValueInputChange={onValueInputChange}
-									refresh={refresh}
-								/>
+								<div className={styles.links}>
+									<NavLink to={`/${list.id}`}>{list.text}</NavLink>
+								</div>
 							);
 						})
 				)
@@ -106,15 +105,27 @@ export const App = () => {
 					})
 					.map((list) => {
 						return (
-							<List
-								id={list.id}
-								text={list.text}
-								onValueInputChange={onValueInputChange}
-								refresh={refresh}
-							/>
+							<div className={styles.links}>
+								<NavLink to={`/${list.id}`}>{list.text}</NavLink>
+							</div>
 						);
 					})
 			)}
+			<Routes>
+				<Route path="/" />
+				<Route
+					path="/:id"
+					element={
+						<List
+							NotFound={NotFound}
+							toDo={toDo}
+							onValueInputChange={onValueInputChange}
+							refresh={refresh}
+						/>
+					}
+				/>
+				<Route path="*" element={<NotFound />} />
+			</Routes>
 		</div>
 	);
 };
