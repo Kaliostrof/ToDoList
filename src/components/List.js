@@ -1,9 +1,12 @@
+import { useContext } from 'react';
 import { AddTask } from './AddTask';
 import { DeleteTask } from './DeleteTask';
 import { EditTask } from './EditTask';
 import styles from './List.module.css';
+import { AppContext } from '../context';
 
-export const List = ({ id, text, onValueInputChange, refresh }) => {
+export const List = ({ refresh }) => {
+	const { id, text } = useContext(AppContext);
 	return (
 		<div className={styles.list} key={id} id={id}>
 			<input
@@ -13,7 +16,6 @@ export const List = ({ id, text, onValueInputChange, refresh }) => {
 				type="text"
 				name="text"
 				value={text}
-				onChange={onValueInputChange}
 				disabled={!AddTask.isUpdating}
 			></input>
 			{/* <div text={list.text}>

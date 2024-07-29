@@ -4,6 +4,7 @@ import { AddTask } from './components/AddTask';
 
 import { SearchingTask } from './components/SearchingTask';
 import { List } from './components/List';
+import { AppContext } from './context';
 
 export const App = () => {
 	const [toDo, setToDo] = useState([]);
@@ -66,13 +67,12 @@ export const App = () => {
 			) : !searchingData ? (
 				!isSorting ? (
 					toDo.map((list) => {
+						const id = list.id;
+						const text = list.text;
 						return (
-							<List
-								id={list.id}
-								text={list.text}
-								onValueInputChange={onValueInputChange}
-								refresh={refresh}
-							/>
+							<AppContext.Provider value={{ id, text }}>
+								<List refresh={refresh} />
+							</AppContext.Provider>
 						);
 					})
 				) : (
@@ -87,13 +87,12 @@ export const App = () => {
 							return 0;
 						})
 						.map((list) => {
+							const id = list.id;
+							const text = list.text;
 							return (
-								<List
-									id={list.id}
-									text={list.text}
-									onValueInputChange={onValueInputChange}
-									refresh={refresh}
-								/>
+								<AppContext.Provider value={{ id, text }}>
+									<List refresh={refresh} />
+								</AppContext.Provider>
 							);
 						})
 				)
@@ -105,13 +104,12 @@ export const App = () => {
 							.includes(searchingData.toLowerCase());
 					})
 					.map((list) => {
+						const id = list.id;
+						const text = list.text;
 						return (
-							<List
-								id={list.id}
-								text={list.text}
-								onValueInputChange={onValueInputChange}
-								refresh={refresh}
-							/>
+							<AppContext.Provider value={{ id, text }}>
+								<List refresh={refresh} />
+							</AppContext.Provider>
 						);
 					})
 			)}
