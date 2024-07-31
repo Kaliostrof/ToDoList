@@ -9,6 +9,7 @@ export const MainPage = ({ toDo, isLoading, searchingData, isSorting }) => {
 			</div>
 		);
 	});
+
 	const sortingLink = toDo
 		.sort((a, b) => {
 			if (a.text.toLowerCase() < b.text.toLowerCase()) {
@@ -26,6 +27,7 @@ export const MainPage = ({ toDo, isLoading, searchingData, isSorting }) => {
 				</div>
 			);
 		});
+
 	const filteredLink = toDo
 		.filter((list) => {
 			return list.text.toLowerCase().includes(searchingData.toLowerCase());
