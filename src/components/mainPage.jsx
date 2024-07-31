@@ -40,19 +40,17 @@ export const MainPage = ({ toDo, isLoading, searchingData, isSorting }) => {
 			);
 		});
 
+	const displayConditions = () => {
+		if (searchingData) {
+			return filteredLink;
+		} else if (isSorting) {
+			return sortingLink;
+		} else {
+			return mappedLink;
+		}
+	};
+
 	return (
-		<>
-			{isLoading ? (
-				<div className={styles.loader}></div>
-			) : !searchingData ? (
-				!isSorting ? (
-					mappedLink
-				) : (
-					sortingLink
-				)
-			) : (
-				filteredLink
-			)}
-		</>
+		<>{(isLoading && <div className={styles.loader}></div>) || displayConditions()}</>
 	);
 };
