@@ -1,4 +1,3 @@
-import { AddTask } from './AddTask';
 import { DeleteTask } from './DeleteTask';
 import { EditTask } from './EditTask';
 import styles from './List.module.css';

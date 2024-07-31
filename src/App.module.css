@@ -25,37 +25,6 @@
 	}
 }
 
-.links {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	margin-top: 10px;
-}
-
-:global a {
-	text-decoration: none;
-	color: rgb(0, 0, 133);
-	display: -webkit-box;
-	-webkit-line-clamp: 1;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-}
-
-:global .active {
-	font-size: large;
-	color: rgb(2, 2, 59);
-	border: 1px solid gray;
-	border-radius: 3px;
-	padding: 4px;
-	box-shadow: 3px 1px 1px rgb(58, 85, 124);
-}
-
-a:hover,
-a:active,
-a:focus {
-	opacity: 0.7;
-}
-
 .notFound {
 	display: flex;
 	justify-content: center;

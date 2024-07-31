@@ -1,10 +1,21 @@
 import styles from './App.module.css';
 import { useEffect, useState } from 'react';
 import { AddTask } from './components/AddTask';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import { SearchingTask } from './components/SearchingTask';
 import { List } from './components/List';
+import { MainPage } from './components/mainPage';
+
+// function debounce(func, delay = 1500) {
+// 	let timeout;
+// 	return (arg) => {
+// 		clearTimeout(timeout);
+// 		timeout = setTimeout(() => {
+// 			func(arg);
+// 		}, delay);
+// 	};
+// }
 
 export const App = () => {
 	const [toDo, setToDo] = useState([]);
@@ -27,16 +38,6 @@ export const App = () => {
 			})
 			.finally(() => setIsLoading(false));
 	}, [refreshFlag]);
-
-	// function debounce(func, delay = 1500) {
-	// 	let timeout;
-	// 	return (arg) => {
-	// 		clearTimeout(timeout);
-	// 		timeout = setTimeout(() => {
-	// 			func(arg);
-	// 		}, delay);
-	// 	};
-	// }
 
 	const onValueInputChange = ({ target }) => {
 		setInputData(target.value);
@@ -66,53 +67,14 @@ export const App = () => {
 				setIsSorting={setIsSorting}
 				refresh={refresh}
 			/>
-			{isLoading ? (
-				<div className={styles.loader}></div>
-			) : !searchingData ? (
-				!isSorting ? (
-					toDo.map((list) => {
-						return (
-							<div className={styles.links}>
-								<NavLink to={`/${list.id}`}>{list.text}</NavLink>
-							</div>
-						);
-					})
-				) : (
-					toDo
-						.sort((a, b) => {
-							if (a.text.toLowerCase() < b.text.toLowerCase()) {
-								return -1;
-							}
-							if (a.text.toLowerCase() > b.text.toLowerCase()) {
-								return 1;
-							}
-							return 0;
-						})
-						.map((list) => {
-							return (
-								<div className={styles.links}>
-									<NavLink to={`/${list.id}`}>{list.text}</NavLink>
-								</div>
-							);
-						})
-				)
-			) : (
-				toDo
-					.filter((list) => {
-						return list.text
-							.toLowerCase()
-							.includes(searchingData.toLowerCase());
-					})
-					.map((list) => {
-						return (
-							<div className={styles.links}>
-								<NavLink to={`/${list.id}`}>{list.text}</NavLink>
-							</div>
-						);
-					})
-			)}
+			<MainPage
+				toDo={toDo}
+				isLoading={isLoading}
+				searchingData={searchingData}
+				isSorting={isSorting}
+			/>
 			<Routes>
-				<Route path="/" />
+				<Route path="/" element />
 				<Route
 					path="/:id"
 					element={
