@@ -11,7 +11,7 @@ export const SearchingTask = ({
 		e.preventDefault();
 		setIsSorting(!isSorting);
 		refresh();
-		console.log(isSorting);
+		// console.log(isSorting);
 	};
 
 	return (

@@ -1,9 +1,6 @@
 import styles from './App.module.css';
 import { useEffect, useState } from 'react';
-import { AddTask } from './components/AddTask';
 import { Routes, Route } from 'react-router-dom';
-
-import { SearchingTask } from './components/SearchingTask';
 import { List } from './components/List';
 import { MainPage } from './components/mainPage';
 
@@ -33,8 +30,8 @@ export const App = () => {
 		fetch('http://localhost:3005/list')
 			.then((response) => response.json())
 			.then((json) => {
+				console.log(json); //Почему отсортирован?
 				setToDo(json);
-				console.log(json);
 			})
 			.finally(() => setIsLoading(false));
 	}, [refreshFlag]);
@@ -43,38 +40,32 @@ export const App = () => {
 		setInputData(target.value);
 	};
 
-	const onValueSearchingChange = ({ target }) => {
-		setSearchingData(target.value);
-	};
-
 	const NotFound = () => (
 		<div className={styles.notFound}>Данная задача отсутствует...</div>
 	);
 
 	return (
 		<div className={styles.app}>
-			<h2>ToDo's List:</h2>
-			<AddTask
-				setInputData={setInputData}
-				inputData={inputData}
-				onValueInputChange={onValueInputChange}
-				refresh={refresh}
-			/>
-			<SearchingTask
-				onValueSearchingChange={onValueSearchingChange}
-				searchingData={searchingData}
-				isSorting={isSorting}
-				setIsSorting={setIsSorting}
-				refresh={refresh}
-			/>
-			<MainPage
-				toDo={toDo}
-				isLoading={isLoading}
-				searchingData={searchingData}
-				isSorting={isSorting}
-			/>
+			<h2>ToDo's List=3</h2>
+
 			<Routes>
-				<Route path="/" element />
+				<Route
+					path="/"
+					element={
+						<MainPage
+							toDo={toDo}
+							isLoading={isLoading}
+							searchingData={searchingData}
+							setSearchingData={setSearchingData}
+							isSorting={isSorting}
+							setIsSorting={setIsSorting}
+							inputData={inputData}
+							setInputData={setInputData}
+							onValueInputChange={onValueInputChange}
+							refresh={refresh}
+						/>
+					}
+				/>
 				<Route
 					path="/:id"
 					element={
@@ -87,6 +78,7 @@ export const App = () => {
 					}
 				/>
 				<Route path="*" element={<NotFound />} />
+				<Route path="/404" element={<NotFound />} />
 			</Routes>
 		</div>
 	);
