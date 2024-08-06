@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { AddTask } from './AddTask';
+import { AddTask } from '../AddTask';
 import { DeleteTask } from './DeleteTask';
 import { EditTask } from './EditTask';
 import styles from './List.module.css';
-import { AppContext } from '../context';
+import { CardContext } from '../context';
 
-export const List = ({ refresh }) => {
-	const { id, text } = useContext(AppContext);
+export const List = () => {
+	const { id, text } = useContext(CardContext);
 	return (
 		<div className={styles.list} key={id} id={id}>
 			<input
@@ -22,8 +22,8 @@ export const List = ({ refresh }) => {
 								{list.id}. {list.text}{' '}
 							</div> */}
 			<form>
-				<DeleteTask refresh={refresh} />
-				<EditTask refresh={refresh} />
+				<DeleteTask />
+				<EditTask />
 			</form>
 		</div>
 	);

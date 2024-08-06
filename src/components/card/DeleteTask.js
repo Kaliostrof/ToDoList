@@ -1,9 +1,11 @@
 import { useContext } from 'react';
 import styles from './BtnTask.module.css';
-import { AppContext } from '../context';
+import { AppContext } from '../../context';
+import { CardContext } from '../context';
 
-export const DeleteTask = ({ refresh }) => {
-	const { id } = useContext(AppContext);
+export const DeleteTask = () => {
+	const { refresh } = useContext(AppContext);
+	const { id } = useContext(CardContext);
 	const onDeleteClick = (event) => {
 		event.preventDefault();
 		// const editElem = event.target.closest('div');

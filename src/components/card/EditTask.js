@@ -1,17 +1,16 @@
 import { useContext, useState } from 'react';
 import styles from './BtnTask.module.css';
-import { AppContext } from '../context';
+import { AppContext } from '../../context';
+import { CardContext } from '../context';
 
-export const EditTask = ({ refresh }) => {
+export const EditTask = () => {
 	const [isUpdating, setIsUpdating] = useState(false);
-	const { id } = useContext(AppContext);
+	const { refresh } = useContext(AppContext);
+	const { id } = useContext(CardContext);
+	console.log('Refresh:', refresh);
 	const onUpdateClick = (event) => {
 		event.preventDefault();
 		setIsUpdating(true);
-		// const editElem = event.target.closest('div');
-		// const editIndex = editElem.id;
-		// const oldText = editElem.text;
-		// console.log(oldText);
 		let newText = prompt('Измените задачу:');
 		if (newText === null) {
 			setIsUpdating(false);

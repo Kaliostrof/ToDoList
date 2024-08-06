@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styles from './AddTask.module.css';
+import { AppContext } from '../context';
 
-export const AddTask = ({ refresh, setInputData, inputData, onValueInputChange }) => {
+export const AddTask = () => {
 	const [isCreating, setIsCreating] = useState(false);
-
+	const { refresh, setInputData, inputData, onValueInputChange } =
+		useContext(AppContext);
+	console.log('Refresh AddTask:', refresh);
 	const onSubmit = (event) => {
 		event.preventDefault();
 		setIsCreating(true);
