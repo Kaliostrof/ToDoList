@@ -27,7 +27,7 @@ export const MainPage = ({
 		);
 	});
 
-	const sortingLink = toDo
+	const sortingLink = [...toDo]
 		.sort((a, b) => {
 			if (a.text.toLowerCase() > b.text.toLowerCase()) {
 				return 1;
@@ -45,7 +45,7 @@ export const MainPage = ({
 			);
 		});
 
-	const filteredLink = toDo
+	const filteredLink = [...toDo]
 		.filter((list) => {
 			return list.text.toLowerCase().includes(searchingData.toLowerCase());
 		})
