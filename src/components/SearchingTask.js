@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import styles from './SearchingTask.module.css';
 import { AppContext } from '../context';
 
-export const SearchingTask = ({ onValueSearchingChange }) => {
-	const { refresh, searchingData, isSorting, setIsSorting } = useContext(AppContext);
+export const SearchingTask = ({ onValueSearchingChange, searchingData }) => {
+	const { refresh, isSorting, setIsSorting } = useContext(AppContext);
 
 	const onSortClick = (e) => {
 		e.preventDefault();

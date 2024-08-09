@@ -5,10 +5,8 @@ import { MainPage } from './components/mainPage';
 
 export const App = () => {
 	const [toDo, setToDo] = useState([]);
-	const [inputData, setInputData] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [refreshFlag, setRefreshFlag] = useState(false);
-	const [searchingData, setSearchingData] = useState('');
 	const [isSorting, setIsSorting] = useState(false);
 
 	const refresh = () => {
@@ -25,36 +23,18 @@ export const App = () => {
 			.finally(() => setIsLoading(false));
 	}, [refreshFlag]);
 
-	// function debounce(func, delay = 1500) {
-	// 	let timeout;
-	// 	return (arg) => {
-	// 		clearTimeout(timeout);
-	// 		timeout = setTimeout(() => {
-	// 			func(arg);
-	// 		}, delay);
-	// 	};
-	// }
-
-	const onValueInputChange = ({ target }) => {
-		setInputData(target.value);
-	};
-
 	return (
 		<div className={styles.app}>
 			<h2>ToDo's List:</h2>
 			<AppContext.Provider
 				value={{
-					searchingData,
-					setSearchingData,
 					isSorting,
 					setIsSorting,
-					inputData,
-					setInputData,
-					onValueInputChange,
 					refresh,
+					toDo,
 				}}
 			>
-				<MainPage toDo={toDo} isLoading={isLoading} />
+				<MainPage isLoading={isLoading} />
 			</AppContext.Provider>
 		</div>
 	);

@@ -4,32 +4,33 @@ import { AppContext } from '../context';
 
 export const AddTask = () => {
 	const [isCreating, setIsCreating] = useState(false);
-	const { refresh, setInputData, inputData, onValueInputChange } =
-		useContext(AppContext);
-	console.log('Refresh AddTask:', refresh);
-	const onSubmit = (event) => {
+	const { refresh } = useContext(AppContext);
+	const [inputData, setInputData] = useState('');
+
+	const onValueInputChange = ({ target }) => {
+		setInputData(target.value);
+	};
+
+	const onSubmit = async (event) => {
 		event.preventDefault();
 		setIsCreating(true);
 
-		if (inputData !== '') {
-			fetch('http://localhost:3005/list', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					text: inputData,
-				}),
-			})
-				.then((rawResponce) => {
-					rawResponce.json();
-				})
-				.then((responce) => {
-					console.log('Ответ сервера', responce);
-					refresh();
-				})
-				.finally(() => {
-					setIsCreating(false);
-					setInputData('');
+		if (inputData) {
+			try {
+				await fetch('http://localhost:3005/list', {
+					method: 'POST',
+					headers: { 'Content-type': 'application/json;charset=utf-8' },
+					body: JSON.stringify({
+						text: inputData,
+					}),
 				});
+			} catch (err) {
+				console.log(err);
+			} finally {
+				setIsCreating(false);
+				setInputData('');
+				refresh();
+			}
 		} else {
 			alert('Error!');
 			setIsCreating(false);

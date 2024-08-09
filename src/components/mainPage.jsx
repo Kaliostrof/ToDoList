@@ -2,80 +2,59 @@ import styles from './mainPage.module.css';
 import { AddTask } from './AddTask';
 import { SearchingTask } from './SearchingTask';
 import { AppContext } from '../context';
-import { List } from './card/List';
-import { useContext } from 'react';
-import { CardContext } from './context';
+import { Card } from './card/Card';
+import { useContext, useState } from 'react';
 
-export const MainPage = ({ toDo, isLoading }) => {
-	const { searchingData, setSearchingData, isSorting } = useContext(AppContext);
+export const MainPage = ({ isLoading }) => {
+	const { isSorting, toDo } = useContext(AppContext);
+	const [searchingData, setSearchingData] = useState('');
+
 	const onValueSearchingChange = ({ target }) => {
 		setSearchingData(target.value);
 	};
 
-	const mappedLink = toDo.map((list) => {
-		const id = list.id;
-		const text = list.text;
-		return (
-			<CardContext.Provider value={{ id, text }}>
-				<List />
-			</CardContext.Provider>
-		);
+	// function debounce(func, delay = 1500) {
+	// 	let timeout;
+	// 	return (arg) => {
+	// 		clearTimeout(timeout);
+	// 		timeout = setTimeout(() => {
+	// 			func(arg);
+	// 		}, delay);
+	// 	};
+	// }
+
+	const toDos = toDo.map((list) => {
+		return <Card key={list.id} id={list.id} text={list.text} />;
 	});
 
-	const sortingLink = [...toDo]
-		.sort((a, b) => {
-			if (a.text.toLowerCase() > b.text.toLowerCase()) {
-				return 1;
-			}
-			if (a.text.toLowerCase() < b.text.toLowerCase()) {
-				return -1;
-			}
-			return 0;
-		})
-		.map((list) => {
-			const id = list.id;
-			const text = list.text;
-			return (
-				<CardContext.Provider value={{ id, text }}>
-					<List />
-				</CardContext.Provider>
-			);
-		});
+	const sortedCards = isSorting
+		? [...toDo]
+				.sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase))
+				.map((list) => {
+					return <Card key={list.id} id={list.id} text={list.text} />;
+				})
+		: toDos;
 
-	const filteredLink = [...toDo]
-		.filter((list) => {
-			return list.text.toLowerCase().includes(searchingData.toLowerCase());
-		})
-		.map((list) => {
-			const id = list.id;
-			const text = list.text;
-			return (
-				<CardContext.Provider value={{ id, text }}>
-					<List />
-				</CardContext.Provider>
-			);
-		});
-
-	const displayConditions = () => {
-		if (!searchingData && !isSorting) {
-			return mappedLink;
-		} else if (isSorting) {
-			return sortingLink;
-		} else if (searchingData) {
-			return filteredLink;
-		}
-	};
+	const filteredCards = searchingData
+		? [...toDo]
+				.filter((list) => {
+					return list.text.toLowerCase().includes(searchingData.toLowerCase());
+				})
+				.map((list) => {
+					return <Card key={list.id} id={list.id} text={list.text} />;
+				})
+		: sortedCards;
 
 	return (
 		<>
 			<>
 				<AddTask />
-				<SearchingTask onValueSearchingChange={onValueSearchingChange} />
+				<SearchingTask
+					searchingData={searchingData}
+					onValueSearchingChange={onValueSearchingChange}
+				/>
 			</>
-			<>
-				{(isLoading && <div className={styles.loader}></div>) ||
-					displayConditions()}
-			</>
+			<>{(isLoading && <div className={styles.loader}></div>) || filteredCards}</>
 		</>
 	);
 };
