@@ -1,17 +1,18 @@
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './SearchingTask.module.css';
+import { selectSearchingData } from '../selectors';
+import { setIsSorting } from '../actions';
 
-export const SearchingTask = ({
-	searchingData,
-	onValueSearchingChange,
-	setIsSorting,
-	isSorting,
-	refresh,
-}) => {
+export const SearchingTask = ({ onValueSearchingChange }) => {
+	const searchingData = useSelector(selectSearchingData);
+	const dispatch = useDispatch();
+
 	const onSortClick = (e) => {
 		e.preventDefault();
-		setIsSorting(!isSorting);
-		refresh();
-		console.log(isSorting);
+		dispatch(setIsSorting());
+		// setIsSorting(!isSorting);
+		// refresh();
+		// console.log(isSorting);
 	};
 
 	return (
