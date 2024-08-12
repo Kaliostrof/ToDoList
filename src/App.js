@@ -21,7 +21,6 @@ export const App = () => {
 
 	useEffect(() => {
 		// setIsLoading(true);
-		dispatch(setIsLoading());
 		dispatch(setToDos());
 		// .finally(() => , setIsLoading(false));
 		dispatch(setIsLoading());

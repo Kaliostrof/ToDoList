@@ -1,5 +1,5 @@
 export const initialAppState = {
-	isLoading: false,
+	isLoading: true,
 	toDos: [],
 };
 
@@ -25,7 +25,7 @@ export const appReducer = (state = initialAppState, action) => {
 		case 'SET_IS_LOADING': {
 			return {
 				...state,
-				isLoading: state.isLoading ? false : true,
+				isLoading: false,
 			};
 		}
 		case 'SET_TODOS': {
