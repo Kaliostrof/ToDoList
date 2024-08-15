@@ -5,6 +5,15 @@ import { List } from './card/List';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsSorting, selectSearchingData, selectToDos } from '../selectors';
 import { setSearchingData } from '../actions';
+import { useRef } from 'react';
+
+const debounce = (func, delay) => {
+	let timeout;
+	return (...arg) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(func, delay, ...arg);
+	};
+};
 
 export const MainPage = ({ isLoading }) => {
 	const toDo = useSelector(selectToDos);
@@ -13,41 +22,27 @@ export const MainPage = ({ isLoading }) => {
 	const searchingData = useSelector(selectSearchingData);
 	const dispatch = useDispatch();
 
+	// const onChange = (text) => {
+	// 	dispatch(setSearchingData(text));
+	// };
+	// const debounceSearching = useRef(debounce(onChange, 1500)).current;
+
 	const onValueSearchingChange = ({ target }) => {
 		dispatch(setSearchingData(target.value));
-		// setSearchingData(target.value);
+		// debounceSearching(target.value);
+		console.log(target.value);
 	};
 
-	// function debounce(func, delay = 1500) {
-	// 	let timeout;
-	// 	return (arg) => {
-	// 		clearTimeout(timeout);
-	// 		timeout = setTimeout(() => {
-	// 			func(arg);
-	// 		}, delay);
-	// 	};
-	// }
-
-	const toDos = toDo.map((list) => {
-		return <List key={list.id} id={list.id} text={list.text} />;
-	});
+	const toDos = [...toDo];
 
 	const sortedCards = isSorting
-		? [...toDo]
-				.sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase))
-				.map((list) => {
-					return <List key={list.id} id={list.id} text={list.text} />;
-				})
+		? [...toDo].sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase))
 		: toDos;
 
 	const filteredCards = searchingData
-		? [...toDo]
-				.filter((list) => {
-					return list.text.toLowerCase().includes(searchingData.toLowerCase());
-				})
-				.map((list) => {
-					return <List key={list.id} id={list.id} text={list.text} />;
-				})
+		? [...toDo].filter((list) => {
+				return list.text.toLowerCase().includes(searchingData.toLowerCase());
+			})
 		: sortedCards;
 
 	return (
@@ -59,7 +54,12 @@ export const MainPage = ({ isLoading }) => {
 					onValueSearchingChange={onValueSearchingChange}
 				/>
 			</>
-			<>{(isLoading && <div className={styles.loader}></div>) || filteredCards}</>
+			<>
+				{(isLoading && <div className={styles.loader}></div>) ||
+					filteredCards.map((list) => {
+						return <List key={list.id} id={list.id} text={list.text} />;
+					})}
+			</>
 		</>
 	);
 };

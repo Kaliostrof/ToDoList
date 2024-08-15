@@ -6,23 +6,11 @@ import { setIsLoading, setToDos } from './actions';
 import { selectIsLoading, selectIsRefresh } from './selectors';
 
 export const App = () => {
-	// const [toDo, setToDo] = useState([]);
-	// const [inputData, setInputData] = useState('');
-	// const [isLoading, setIsLoading] = useState(false);
-	// const [refreshFlag, setRefreshFlag] = useState(false);
-	// const [searchingData, setSearchingData] = useState('');
-	// const [isSorting, setIsSorting] = useState(false);
-
-	// const refresh = () => {
-	// 	setRefreshFlag(!refreshFlag);
-	// };
 	const dispatch = useDispatch();
 	const refreshFlag = useSelector(selectIsRefresh);
 
 	useEffect(() => {
-		// setIsLoading(true);
 		dispatch(setToDos());
-		// .finally(() => , setIsLoading(false));
 		dispatch(setIsLoading());
 	}, [refreshFlag, dispatch]);
 

@@ -6,6 +6,7 @@ export const initialAppState = {
 export const initialFiltredState = {
 	isSorting: false,
 	searchingData: '',
+	searchingInput: '',
 };
 
 export const initialAddState = {
@@ -34,6 +35,22 @@ export const appReducer = (state = initialAppState, action) => {
 				toDos: [...payload],
 			};
 		}
+		case 'SET_DELETE': {
+			return {
+				...state,
+				toDos: state.toDos.filter((todo) => {
+					return todo.id !== payload;
+				}),
+			};
+		}
+		// case 'SET_EDIT': {
+		// 	return {
+		// 		...state,
+		// 		toDos: state.toDos.map((todo) => {
+		// 			if (todo.id !== payload.id) return (todo.text = payload.text);
+		// 		}),
+		// 	};
+		// }
 		default:
 			return state;
 	}
@@ -47,6 +64,12 @@ export const filterReducer = (state = initialFiltredState, action) => {
 			return {
 				...state,
 				searchingData: payload,
+			};
+		}
+		case 'SET_SEARCHING_INPUT': {
+			return {
+				...state,
+				searchingInput: payload,
 			};
 		}
 		case 'SET_IS_SORTING': {

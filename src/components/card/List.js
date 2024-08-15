@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from './button';
 import styles from './List.module.css';
-import { selectIsRefresh } from '../../selectors';
-import { setRefreshFlag } from '../../actions';
-import { useState } from 'react';
+import { selectEditData, selectIsRefresh } from '../../selectors';
+import { setDelete, setEditData, setRefreshFlag } from '../../actions';
+import { useEffect, useState } from 'react';
 
 export const List = ({ id, text }) => {
 	const dispatch = useDispatch();
 	const [editData, setEditData] = useState(text);
+	// useEffect(() => {
+	// 	dispatch(setEditData(text));
+	// }, []);
 	// const editData = useSelector(selectEditData);
-
-	const refreshFlag = useSelector(selectIsRefresh); //дописать
 
 	// dispatch(setEditData(text));
 	const handleDeleteClick = async (event) => {
@@ -22,9 +23,7 @@ export const List = ({ id, text }) => {
 		} catch (err) {
 			console.log(err);
 		} finally {
-			dispatch(setRefreshFlag());
-			console.log('Second:', refreshFlag);
-
+			dispatch(setDelete(id));
 			// refresh();
 		}
 	};
@@ -44,9 +43,6 @@ export const List = ({ id, text }) => {
 				});
 			} catch (err) {
 				console.log(err);
-			} finally {
-				dispatch(setRefreshFlag());
-				// refresh();
 			}
 		} else {
 			alert('Ввод пустой строки запрещён!');

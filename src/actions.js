@@ -17,6 +17,11 @@ export const setSearchingData = (data) => ({
 	payload: data,
 });
 
+export const setSearchingInput = (data) => ({
+	type: 'SET_SEARCHING_INPUT',
+	payload: data,
+});
+
 export const setIsCreating = () => ({
 	type: 'SET_IS_CREATING',
 });
@@ -37,4 +42,9 @@ export const setRefreshFlag = () => ({
 export const setEditData = (editData) => ({
 	type: 'SET_EDIT_DATA',
 	payload: editData,
+});
+
+export const setDelete = (id) => ({
+	type: 'SET_DELETE',
+	payload: id,
 });
