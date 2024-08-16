@@ -1,49 +1,24 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button } from './button';
 import styles from './List.module.css';
-import { selectEditData, selectIsRefresh } from '../../selectors';
-import { setDelete, setEditData, setRefreshFlag } from '../../actions';
-import { useEffect, useState } from 'react';
+import { deleteToDo, updateToDo } from '../../store/actions';
+import { useState } from 'react';
 
 export const List = ({ id, text }) => {
 	const dispatch = useDispatch();
 	const [editData, setEditData] = useState(text);
-	// useEffect(() => {
-	// 	dispatch(setEditData(text));
-	// }, []);
-	// const editData = useSelector(selectEditData);
 
-	// dispatch(setEditData(text));
-	const handleDeleteClick = async (event) => {
-		event.preventDefault();
-		try {
-			await fetch(`http://localhost:3005/list/${id}`, {
-				method: 'DELETE',
-			});
-		} catch (err) {
-			console.log(err);
-		} finally {
-			dispatch(setDelete(id));
-			// refresh();
-		}
+	const handleDeleteClick = () => {
+		dispatch(deleteToDo({ id, text }));
 	};
 
-	const handleEditBlur = async () => {
-		let newText = editData;
-		if (newText === null) {
+	const handleEditBlur = () => {
+		let text = editData;
+		if (text === null) {
 			return;
-		} else if (newText) {
-			try {
-				await fetch(`http://localhost:3005/list/${id}`, {
-					method: 'PUT',
-					headers: { 'Content-type': 'application/json;charset=utf-8' },
-					body: JSON.stringify({
-						text: newText,
-					}),
-				});
-			} catch (err) {
-				console.log(err);
-			}
+		} else if (text) {
+			const newToDo = { text, id };
+			dispatch(updateToDo(newToDo));
 		} else {
 			alert('Ввод пустой строки запрещён!');
 		}

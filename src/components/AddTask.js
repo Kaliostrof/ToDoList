@@ -1,49 +1,31 @@
 import styles from './AddTask.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectInputData, selectIsCreating } from '../selectors';
-import { setInputData, setIsCreating, setRefreshFlag } from '../actions';
+import { useDispatch } from 'react-redux';
+import { addToDo } from '../store/actions';
+import { useState } from 'react';
 
 export const AddTask = () => {
-	// const [isCreating, setIsCreating] = useState(false);
-	// const { refresh } = useContext(AppContext);
-	// const [inputData, setInputData] = useState('');
+	const [isCreating, setIsCreating] = useState(false);
+	const [inputData, setInputData] = useState('');
 	const dispatch = useDispatch();
-	const inputData = useSelector(selectInputData);
-	const isCreating = useSelector(selectIsCreating);
 
 	const onValueInputChange = ({ target }) => {
-		dispatch(setInputData(target.value));
-		// setInputData(target.value);
+		setInputData(target.value);
 	};
 	const onSubmit = async (event) => {
 		event.preventDefault();
-		dispatch(setIsCreating());
-		// setIsCreating(true);
+		setIsCreating(true);
 
 		if (inputData) {
 			try {
-				await fetch('http://localhost:3005/list', {
-					method: 'POST',
-					headers: { 'Content-type': 'application/json;charset=utf-8' },
-					body: JSON.stringify({
-						text: inputData,
-					}),
-				});
+				await dispatch(addToDo(inputData));
 			} catch (err) {
 				console.log(err);
 			} finally {
-				dispatch(setIsCreating());
-				dispatch(setInputData(''));
-				dispatch(setRefreshFlag());
-
-				// setIsCreating(false);
-				// setInputData('');
-				// refresh();
+				setIsCreating(false);
+				setInputData('');
 			}
 		} else {
-			alert('Error!');
-			dispatch(setIsCreating());
-			// setIsCreating(false);
+			setIsCreating(false);
 		}
 	};
 
@@ -58,7 +40,7 @@ export const AddTask = () => {
 					value={inputData}
 					onChange={onValueInputChange}
 				></input>
-				<button className={styles['add-button']} disabled={isCreating !== false}>
+				<button className={styles['add-button']} disabled={isCreating}>
 					Добавить
 				</button>
 			</form>

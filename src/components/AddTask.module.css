@@ -26,6 +26,10 @@
 	cursor: pointer;
 }
 
+.add-button:disabled {
+	background-color: rgb(56, 105, 88);
+}
+
 .add-button:hover,
 .add-button:active,
 .add-button:focus {

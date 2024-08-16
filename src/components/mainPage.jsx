@@ -2,35 +2,26 @@ import styles from './mainPage.module.css';
 import { AddTask } from './AddTask';
 import { SearchingTask } from './SearchingTask';
 import { List } from './card/List';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectIsSorting, selectSearchingData, selectToDos } from '../selectors';
-import { setSearchingData } from '../actions';
-import { useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { selectIsLoading, selectToDos } from '../store/selectors';
+import { useRef, useState } from 'react';
+import { debounce } from '../utils';
 
-const debounce = (func, delay) => {
-	let timeout;
-	return (...arg) => {
-		clearTimeout(timeout);
-		timeout = setTimeout(func, delay, ...arg);
-	};
-};
-
-export const MainPage = ({ isLoading }) => {
+export const MainPage = () => {
 	const toDo = useSelector(selectToDos);
-	const isSorting = useSelector(selectIsSorting);
-	// const [searchingData, setSearchingData] = useState('');
-	const searchingData = useSelector(selectSearchingData);
-	const dispatch = useDispatch();
+	const [searchingData, setSearchingData] = useState('');
+	const [searchInput, setSearchInput] = useState('');
+	const [isSorting, setIsSorting] = useState(false);
+	const isLoading = useSelector(selectIsLoading);
 
-	// const onChange = (text) => {
-	// 	dispatch(setSearchingData(text));
-	// };
-	// const debounceSearching = useRef(debounce(onChange, 1500)).current;
+	const onChange = (text) => {
+		setSearchInput(text);
+	};
+	const debounceSearching = useRef(debounce(onChange, 1500)).current;
 
 	const onValueSearchingChange = ({ target }) => {
-		dispatch(setSearchingData(target.value));
-		// debounceSearching(target.value);
-		console.log(target.value);
+		setSearchingData(target.value); // тут просто меняем состояние инпута
+		debounceSearching(target.value); // а здесь уже делаем запрос с debounce
 	};
 
 	const toDos = [...toDo];
@@ -39,7 +30,7 @@ export const MainPage = ({ isLoading }) => {
 		? [...toDo].sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase))
 		: toDos;
 
-	const filteredCards = searchingData
+	const filteredCards = searchInput
 		? [...toDo].filter((list) => {
 				return list.text.toLowerCase().includes(searchingData.toLowerCase());
 			})
@@ -51,6 +42,7 @@ export const MainPage = ({ isLoading }) => {
 				<AddTask />
 				<SearchingTask
 					searchingData={searchingData}
+					onSort={() => setIsSorting((prev) => !prev)}
 					onValueSearchingChange={onValueSearchingChange}
 				/>
 			</>
